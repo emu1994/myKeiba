@@ -66,7 +66,7 @@ npm run preview
 
 5. **リモートリポジトリを追加**
    ```bash
-   git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPO_NAME.git
+   git remote add origin https://github.com/emu1994/myKeiba.git
    ```
    （YOUR_USERNAMEとYOUR_REPO_NAMEを実際の値に置き換えてください）
 
@@ -79,6 +79,48 @@ npm run preview
    ```bash
    git push -u origin main
    ```
+
+## GitHub Pagesへのデプロイ
+
+### 自動デプロイ（推奨）
+
+1. **GitHubリポジトリの設定**
+   - リポジトリの「Settings」→「Pages」に移動
+   - 「Source」で「GitHub Actions」を選択
+
+2. **自動デプロイの有効化**
+   - このリポジトリには既に `.github/workflows/deploy.yml` が含まれています
+   - `main` ブランチにプッシュすると自動的にビルドとデプロイが実行されます
+
+3. **デプロイの確認**
+   - 数分待ってから `https://emu1994.github.io/myKeiba/` にアクセス
+   - 「Actions」タブでデプロイの進行状況を確認できます
+
+### 手動デプロイ
+
+1. **ビルド**
+   ```bash
+   npm run build
+   ```
+
+2. **distフォルダをデプロイ**
+   - GitHub Pagesの設定で「Deploy from a branch」を選択
+   - ブランチ: `gh-pages`、フォルダ: `/ (root)` を選択
+   - または、`dist` フォルダの内容を `gh-pages` ブランチにプッシュ
+
+### トラブルシューティング
+
+- **404エラーが出る場合**
+  - `vite.config.js` の `base: '/myKeiba/'` が正しく設定されているか確認
+  - リポジトリ名が `myKeiba` と一致しているか確認
+
+- **アセットが読み込まれない場合**
+  - ビルド後に `dist` フォルダ内のパスが正しいか確認
+  - ブラウザの開発者ツールでエラーを確認
+
+- **デプロイが失敗する場合**
+  - GitHub Actionsのログを確認
+  - `package.json` の依存関係が正しくインストールされているか確認
 
 ### 方法2: GitHub Desktopを使用
 
