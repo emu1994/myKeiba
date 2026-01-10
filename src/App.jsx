@@ -151,6 +151,7 @@ export default function App() {
       {gameState === 'live' && currentRace && (
         <LiveRace
           currentRace={currentRace}
+          betCart={betCart}
           onFinish={finishRaceResult}
         />
       )}
