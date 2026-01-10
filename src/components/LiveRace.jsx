@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Timer, Ticket } from 'lucide-react';
 
-export default function LiveRace({ currentRace, betCart, onFinish }) {
+export default function LiveRace({ currentRace, betCart = [], onFinish }) {
   const [horseProgress, setHorseProgress] = useState(
     currentRace.runners.map(r => ({
       ...r,
@@ -15,6 +15,9 @@ export default function LiveRace({ currentRace, betCart, onFinish }) {
   const frameRef = useRef();
   const raceStartTime = useRef(null);
   const finishedCount = useRef(0);
+
+  // デバッグ用：betCartの内容を確認
+  console.log('LiveRace betCart:', betCart, 'Length:', betCart?.length);
 
   useEffect(() => {
     const duration = 12000; 
@@ -139,37 +142,45 @@ export default function LiveRace({ currentRace, betCart, onFinish }) {
         </div>
       </div>
 
-      {betCart && betCart.length > 0 && (
-        <div className="w-full lg:w-80">
-          <div className="bg-slate-900 rounded-2xl p-6 text-white shadow-xl sticky top-4">
-            <h3 className="text-xs font-bold text-slate-400 mb-4 uppercase tracking-widest flex items-center gap-2">
-              <Ticket size={14} />
-              購入馬券
-              <span className="bg-emerald-500 text-white px-2 py-0.5 rounded text-[10px]">{betCart.length}</span>
-            </h3>
-            <div className="space-y-3 max-h-[500px] overflow-y-auto pr-2 no-scrollbar">
-              {betCart.map((ticket, i) => (
-                <div key={i} className="bg-white/5 p-3 rounded-xl border border-white/5">
-                  <div className="text-[10px] text-emerald-400 font-bold uppercase mb-1">{ticket.typeName}</div>
-                  <div className="font-black text-sm tracking-tight mb-2">{ticket.numbers.join(' - ')}</div>
-                  <div className="flex justify-between items-center text-xs">
-                    <span className="text-slate-400">オッズ: {ticket.odds}倍</span>
-                    <span className="font-mono font-bold text-emerald-400">¥{ticket.amount.toLocaleString()}</span>
+      <div className="w-full lg:w-80">
+        <div className="bg-slate-900 rounded-2xl p-6 text-white shadow-xl sticky top-4">
+          <h3 className="text-xs font-bold text-slate-400 mb-4 uppercase tracking-widest flex items-center gap-2">
+            <Ticket size={14} />
+            購入馬券
+            <span className="bg-emerald-500 text-white px-2 py-0.5 rounded text-[10px]">
+              {Array.isArray(betCart) && betCart.length > 0 ? betCart.length : 0}
+            </span>
+          </h3>
+          {Array.isArray(betCart) && betCart.length > 0 ? (
+            <>
+              <div className="space-y-3 max-h-[500px] overflow-y-auto pr-2 no-scrollbar">
+                {betCart.map((ticket, i) => (
+                  <div key={i} className="bg-white/5 p-3 rounded-xl border border-white/5">
+                    <div className="text-[10px] text-emerald-400 font-bold uppercase mb-1">{ticket.typeName}</div>
+                    <div className="font-black text-sm tracking-tight mb-2">{ticket.numbers.join(' - ')}</div>
+                    <div className="flex justify-between items-center text-xs">
+                      <span className="text-slate-400">オッズ: {ticket.odds}倍</span>
+                      <span className="font-mono font-bold text-emerald-400">¥{ticket.amount.toLocaleString()}</span>
+                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
-            <div className="mt-4 pt-4 border-t border-white/10">
-              <div className="flex justify-between items-center text-xs mb-1">
-                <span className="text-slate-400 font-bold">合計</span>
-                <span className="font-mono font-black text-white">
-                  ¥{betCart.reduce((sum, t) => sum + t.amount, 0).toLocaleString()}
-                </span>
+                ))}
               </div>
+              <div className="mt-4 pt-4 border-t border-white/10">
+                <div className="flex justify-between items-center text-xs mb-1">
+                  <span className="text-slate-400 font-bold">合計</span>
+                  <span className="font-mono font-black text-white">
+                    ¥{betCart.reduce((sum, t) => sum + t.amount, 0).toLocaleString()}
+                  </span>
+                </div>
+              </div>
+            </>
+          ) : (
+            <div className="text-slate-600 text-center py-10 text-xs italic">
+              購入した馬券がありません
             </div>
-          </div>
+          )}
         </div>
-      )}
+      </div>
     </div>
   );
 }
